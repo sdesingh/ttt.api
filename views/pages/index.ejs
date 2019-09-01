@@ -5,6 +5,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
 	<link rel="stylesheet" href="/style.css" type="text/css">
+	<script src="https://cdn.jsdelivr.net/npm/vue"></script>
 	<title>Tic Tac Toe</title>
 </head>
 <body>
@@ -13,12 +14,19 @@
 
 	<% if (user) { %>
 		<h2>Hello <%= user %>, <%= date %> </h2>
+		<%- include ttt.ejs %>
+	<% } %>
+	
+
+	<% if (!user) { %>
+		<form action="/ttt" method="post">
+			Name:<br>
+			<input type="text" name="name"><br>
+			<input type="submit" value="Submit">
+		</form>
 	<% } %>
 
-	<form action="/ttt" method="post">
-		Name:<br>
-		<input type="text" name="name"><br>
-		<input type="submit" value="Submit">
-	</form>
+
+
 	
 </html>

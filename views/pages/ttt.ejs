@@ -1,0 +1,38 @@
+<div id="vue-app">
+		<tictac></tictac>
+</div>
+
+
+<script type="x-template" id="tictac">
+    <div id="grid">
+			<div class="grid-item" v-for="(s, i) in grid" :key="i">
+				 {{ s }} 
+			</div>
+    </div>
+</script>
+
+<script>
+
+	Vue.component('tictac', 
+		{
+			template: '#tictac',
+			mounted(){
+				for (let i = 0; i < 9; i++) {
+					this.grid.push('X');
+				}
+			},
+			data(){
+				return {
+					grid: []
+				}
+			}
+		}
+
+	)
+	var app = new Vue({
+			el: '#vue-app',
+			mounted() {
+			},
+	});
+		
+</script>
