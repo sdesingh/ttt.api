@@ -4,14 +4,14 @@ import path from "path";
 
 export default [
   {
-    path: "/",
+    path: "/ttt",
     method: "get",
     handler: async (req: Request, res: Response) => {
       res.render("pages/index.ejs", { user: null, date: null});
     }
   },
   {
-    path: "/",
+    path: "/ttt",
     method: "post",
     handler: async (req: Request, res: Response) => {
 
@@ -27,7 +27,7 @@ export default [
     }
   },
   {
-    path: "/play",
+    path: "/ttt/play",
     method: "post",
     handler: async (req: Request, res: Response) => {
 
