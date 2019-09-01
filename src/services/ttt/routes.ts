@@ -1,16 +1,33 @@
 import { Request, Response } from "express";
 import { TicTacToe } from "./model/TicTacToe";
+import path from "path";
 
 export default [
   {
-    path: "/ttt",
+    path: "/",
     method: "get",
     handler: async (req: Request, res: Response) => {
-      res.send("Hi!");
+      res.render("pages/index.ejs", { user: null, date: null});
     }
   },
   {
-    path: "/ttt/play",
+    path: "/",
+    method: "post",
+    handler: async (req: Request, res: Response) => {
+
+      let name : string = req.body.name;
+      let date : Date = new Date(Date.now());
+
+      res
+        .status(200)
+        .render("pages/index", {
+          user: name,
+          date: date
+        })
+    }
+  },
+  {
+    path: "/play",
     method: "post",
     handler: async (req: Request, res: Response) => {
 
@@ -21,18 +38,6 @@ export default [
         .send(json);
     }
   },
-  {
-    path: "/ttt",
-    method: "post",
-    handler: async (req: Request, res: Response) => {
 
-      let name : string = req.body.name;
-      let date : Date = new Date(Date.now());
-
-      res
-        .status(200)
-        .send(`Hi ${name}, ${date.toString()}`)
-    }
-  },
 
 ]
