@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { TicTacToe } from "./model/TicTacToe";
 
 export default [
   {
@@ -6,6 +7,18 @@ export default [
     method: "get",
     handler: async (req: Request, res: Response) => {
       res.send("Hi!");
+    }
+  },
+  {
+    path: "/ttt/play",
+    method: "post",
+    handler: async (req: Request, res: Response) => {
+
+      let json = TicTacToe.getWinnerFromJson(req.body.grid);
+
+      res
+        // .sendStatus(200)
+        .send(json);
     }
   },
   {
@@ -20,5 +33,6 @@ export default [
         .status(200)
         .send(`Hi ${name}, ${date.toString()}`)
     }
-  }
+  },
+
 ]
