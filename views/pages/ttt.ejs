@@ -5,7 +5,7 @@
 
 <script type="x-template" id="tictac">
     <div id="grid">
-			<div class="grid-item" v-for="(s, i) in grid" :key="i">
+			<div class="grid-item" v-for="(s, i) in grid" :key="i" @click="gridItemClicked(i)">
 				 {{ s }} 
 			</div>
     </div>
@@ -18,14 +18,28 @@
 			template: '#tictac',
 			mounted(){
 				for (let i = 0; i < 9; i++) {
-					this.grid.push('X');
+					this.grid.push(' ');
 				}
 			},
 			data(){
 				return {
-					grid: []
+					grid: [],
+					currentChar: 'X'
 				}
-			}
+			},
+			methods: {
+				gridItemClicked(index){
+					if(this.grid[index] == 'X' || this.grid[index] == 'O') return; 
+					
+					this.$set(this.grid, index, this.currentChar);
+					this.currentChar = this.currentChar == 'X' ? 'O' : 'X';
+					updateGameState();
+				},
+				updateGameState(){
+
+				}
+				
+			},
 		}
 
 	)
