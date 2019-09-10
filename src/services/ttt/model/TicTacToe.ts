@@ -73,14 +73,12 @@ export class TicTacToe {
           return true;
         }
       }
-
-
       
       // Check for diagonal.
       if(i == 0){
 
         if(this.grid[0] == this.grid[4] && this.grid[0] == this.grid[8]){
-          this.winner = grid[j];
+          this.winner = grid[0];
           return true;
         }
     
@@ -88,7 +86,7 @@ export class TicTacToe {
       } else if (i == 2){
 
         if(this.grid[6] == this.grid[4] && this.grid[0] == this.grid[2]){
-          this.winner = grid[j];
+          this.winner = grid[6];
           return true;
         }
           
