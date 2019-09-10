@@ -35,7 +35,6 @@ export class TicTacToe {
   updateGameState(): void {
 
     if(this.hasWinner()){
-      this.winner = this.winner;
       this.state = GameState.WINNER;
     } 
     else if (this.movesMade == 9){
@@ -43,6 +42,9 @@ export class TicTacToe {
     }
     else {
       this.makeAIMove();
+      if(this.hasWinner()){
+        this.state = GameState.WINNER;
+      }
     }
 
   }
@@ -77,7 +79,7 @@ export class TicTacToe {
       // Check for diagonal.
       if(i == 0){
 
-        if(this.grid[0] == this.grid[4] && this.grid[0] == this.grid[8]){
+        if(this.grid[0] == this.grid[4] && this.grid[0] == this.grid[8] && this.grid[0] != ' '){
           this.winner = grid[0];
           return true;
         }
@@ -85,7 +87,7 @@ export class TicTacToe {
         
       } else if (i == 2){
 
-        if(this.grid[6] == this.grid[4] && this.grid[0] == this.grid[2]){
+        if(this.grid[6] == this.grid[4] && this.grid[0] == this.grid[2] && this.grid[0] != ' '){
           this.winner = grid[6];
           return true;
         }
