@@ -1,7 +1,11 @@
+import _ from 'lodash';
+
 export class TicTacToe {
 
   player1 : string;
   player2 : string;
+  player1_char : string = 'X';
+  player2_char : string = 'O';
   movesMade: number = 0;
   winner: string = ' ';
   state: GameState = GameState.NOT_STARTED;
@@ -28,14 +32,17 @@ export class TicTacToe {
   /**
    * @param playerChar Player who's move initiated the update of the game state.
    */
-  updateGameState(playerChar: string): void {
+  updateGameState(): void {
 
     if(this.hasWinner()){
-      this.winner = playerChar;
+      this.winner = this.winner;
       this.state = GameState.WINNER;
     } 
     else if (this.movesMade == 9){
       this.state = GameState.TIE;
+    }
+    else {
+      this.makeAIMove();
     }
 
   }
@@ -47,18 +54,26 @@ export class TicTacToe {
     for (let i = 0; i < 3; i++) {
       
       let j = i * 3;
-        
-      // Check for horizontal
-      if(grid[j] == grid[j+1] && grid[j] == grid[j+2]){
-        this.winner = grid[j];
-        return true;
+
+      if(grid[j] != ' ')
+      {
+        // Check for horizontal
+        if(grid[j] == grid[j+1] && grid[j] == grid[j+2]){
+          this.winner = grid[j];
+          return true;
+        }
       }
         
-      // Check for vertical
-      if((grid[j] == grid[j+3] && grid[j] == grid[j+6])){
-        this.winner = grid[j];
-        return true;
+      j = i;
+      if(grid[j] != ' ') 
+      {
+        // Check for vertical
+        if((grid[j] == grid[j+3] && grid[j] == grid[j+6])){
+          this.winner = grid[j];
+          return true;
+        }
       }
+
 
       
       // Check for diagonal.
@@ -85,17 +100,40 @@ export class TicTacToe {
   }
 
 
-  public static getWinnerFromJson(grid: string[]) : Object {
+  public static updateGameStateFromJson(grid: string[]) : Object {
     let game = new TicTacToe('player one', 'player two');
     game.grid = grid
-    game.hasWinner();
+    game.updateGameState();
 
     return {
       grid: game.grid,
-      name: game.player1,
+      player_one: game.player1,
+      player_two: game.player2,
       winner: game.winner
     };
     
+  }
+
+  makeAIMove() : void {
+    // Find a space to make your move.
+
+    let possibleIndices : number[] = [];
+
+    for (let i = 0; i < this.grid.length; i++) {
+      // Empty space, possible place to make move.
+      if(this.grid[i] == ' '){
+        possibleIndices.push(i);
+      }
+    }
+    
+    // Choose a random index to place the piece.
+    if(possibleIndices.length != 0){
+      let random = _.random(0, possibleIndices.length - 1);
+      let index = possibleIndices[random];
+      this.grid[index] = this.player2_char;
+    }
+
+
   }
 
   makeMove(playerID: number, index: number): boolean {
@@ -108,7 +146,7 @@ export class TicTacToe {
     else{
       this.grid[index] = this.getPlayerChar(playerID);
       this.movesMade++;
-      this.updateGameState(this.getPlayerChar(playerID));
+      this.updateGameState();
       return true;
     } 
     

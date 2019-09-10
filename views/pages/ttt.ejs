@@ -4,11 +4,13 @@
 
 
 <script type="x-template" id="tictac">
-    <div id="grid">
-			<div class="grid-item" v-for="(s, i) in grid" :key="i" @click="gridItemClicked(i)">
+    <div id="grid" >
+			<div  v-if="!gameOver" class="grid-item" v-for="(s, i) in grid" :key="i" @click="gridItemClicked(i)">
 				 {{ s }} 
 			</div>
-    </div>
+			<h2 v-if="gameOver">Game Over! Winner: {{ winner }} </h2>
+			<button v-if="gameOver" @click="initGame()">New Game</button>
+		</div>
 </script>
 
 <script>
@@ -17,26 +19,66 @@
 		{
 			template: '#tictac',
 			mounted(){
-				for (let i = 0; i < 9; i++) {
-					this.grid.push(' ');
-				}
+				this.initGame()
 			},
 			data(){
 				return {
 					grid: [],
+					winner: ' ',
 					currentChar: 'X'
+				}
+			},
+			computed: {
+				gameOver() {
+					let count = 0;
+					this.grid.forEach(m => {
+						if(m != ' ') count++;
+					});
+					return this.winner != ' ' || count == 9;
 				}
 			},
 			methods: {
 				gridItemClicked(index){
-					if(this.grid[index] == 'X' || this.grid[index] == 'O') return; 
+					if(this.grid[index] != ' ') return; 
 					
 					this.$set(this.grid, index, this.currentChar);
-					this.currentChar = this.currentChar == 'X' ? 'O' : 'X';
-					updateGameState();
+					this.updateGameState();
 				},
 				updateGameState(){
 
+					let postData = {
+						grid: this.grid
+					}
+
+					let url = "http://localhost:3000/ttt/play";
+					let body = JSON.stringify(postData);
+
+					fetch(url, {
+						method: 'POST',
+						headers: {
+            'Content-Type': 'application/json',
+						},
+						body: body,
+					})
+					.then(response => {
+						return response.json();
+					})
+					.then(json => {
+						this.grid = json.grid;
+						this.winner = json.winner;
+					})
+				},
+				resetGame(){
+
+				},
+				initGame(){
+					let grid = [];
+					for (let i = 0; i < 9; i++) {
+						grid.push(' ');
+					}
+
+					this.grid = grid;
+					this.winner = ' ';
 				}
 				
 			},

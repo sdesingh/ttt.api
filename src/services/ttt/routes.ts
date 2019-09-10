@@ -31,8 +31,8 @@ export default [
     method: "post",
     handler: async (req: Request, res: Response) => {
 
-      let json = TicTacToe.getWinnerFromJson(req.body.grid);
-
+      let json = TicTacToe.updateGameStateFromJson(req.body.grid);
+      // console.log(json);
       res
         // .sendStatus(200)
         .send(json);
