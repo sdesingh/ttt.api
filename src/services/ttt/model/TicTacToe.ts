@@ -85,9 +85,11 @@ export class TicTacToe {
         }
     
         
-      } else if (i == 2){
+      }
+      
+      if (i == 1){
 
-        if(this.grid[6] == this.grid[4] && this.grid[0] == this.grid[2] && this.grid[0] != ' '){
+        if(this.grid[6] == this.grid[4] && this.grid[2] == this.grid[4] && this.grid[0] != ' '){
           this.winner = grid[6];
           return true;
         }
