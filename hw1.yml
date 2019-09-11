@@ -1,0 +1,14 @@
+- hosts: hw1
+  connection: local
+  become: yes
+  become_user: root
+  tasks:
+   - name: Install Nginx
+     apt: 
+       name: nginx
+       state: installed
+       update_cache: true
+   - name: Checkout from git
+     apt: 
+       repo: 'https://github.com/mangopeeler/ttt.api.git'
+       dest: ~/dev/ttt
