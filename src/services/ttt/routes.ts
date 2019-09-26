@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import { TicTacToe } from "./model/TicTacToe";
-import path from "path";
 
 export default [
   {
@@ -38,6 +37,25 @@ export default [
         .send(json);
     }
   },
-
-
+  {
+    path: "/ttt/listgames",
+    method: "get",
+    handler: async (req: Request, res: Response) => {
+      //TODO: List all games played by this user.
+    }
+  },
+  {
+    path: "/ttt/getgame",
+    method: "get",
+    handler: async (req: Request, res: Response) => {
+      //TODO: List all games played by this user.
+    }
+  },
+  {
+    path: "/ttt/getscore",
+    method: "get",
+    handler: async (req: Request, res: Response) => {
+      //TODO: List all games played by this user.
+    }
+  }
 ]

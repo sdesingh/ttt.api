@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hw0
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hw0
+  template:
+    metadata:
+      labels:
+        app: hw0
+    spec:
+      containers:
+      - name: homework3
+        image: sdesingh/cse356:first
+        ports:
+        - containerPort: 80

@@ -13,6 +13,15 @@ export default [
       
     }
   },
+  {
+    path: "/hw3.yml",
+    method: "get",
+    handler: async (req: Request, res: Response) => {
+
+      res.status(200).sendFile(path.join(__dirname, '../../hw3.yml'));
+      
+    }
+  },
   ...tttRoutes
   
 ];
