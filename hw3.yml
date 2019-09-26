@@ -1,19 +1,12 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: v1
+kind: Pod
 metadata:
-  name: hw0
+  name: hw3
+  labels:
+    app: hw0
 spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: hw0
-  template:
-    metadata:
-      labels:
-        app: hw0
-    spec:
-      containers:
-      - name: homework3
-        image: sdesingh/cse356:first
-        ports:
+  containers:
+    - name: hw3
+      image: sdesingh/356hw0:first
+      ports: 
         - containerPort: 80
