@@ -1,11 +1,14 @@
-import {Request, Response } from 'express';
+import { Request, Response } from 'express';
+import * as controller from './UserController';
 
 export default [
   {
     path: "/adduser",
     method: "post",
     handler: async (req: Request, res: Response) => {
-      //TODO: Add a disabled user.
+
+      controller.addUser(req.body, res);
+
     }
   },
   {
@@ -19,7 +22,7 @@ export default [
     path: "/login",
     method: "post",
     handler: async (req: Request, res: Response) => {
-      //TODO: Login user.
+      controller.getUser(req.body.email, res);
     }
   },
   {

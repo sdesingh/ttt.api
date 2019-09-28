@@ -4,22 +4,37 @@ import { applyMiddleware, applyRoutes } from "./utils";
 import routes from "./services";
 import middleware from "./middleware";
 import errorHandlers from "./middleware/errorHandlers";
-import path from 'path';
+import mongoose from 'mongoose';
+import keys from './config/keys.json';
+
 
 process.on("uncaughtException", e => {
-	console.log(e);
-	process.exit(1);
+    console.log(e);
+    process.exit(1);
 });
 
 process.on("unhandledRejection", e => {
-	console.log(e);
-	process.exit(1);
+    console.log(e);
+    process.exit(1);
 })
 
 const router = express();
-router.set("views", path.join(__dirname, "../views"));
-router.use(express.static(path.join(__dirname, "../views/css")));
-router.set("view engine", "ejs");
+
+mongoose
+  .connect
+  (
+      keys.db_hostname,
+      { 
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        user: keys.db_username,
+        pass: keys.db_password,
+      }
+  )
+  .then(() => console.log("Successfully connected to MongoDB."))
+  .catch(err => console.log(err));
+
+
 applyMiddleware(middleware, router);
 applyRoutes(routes, router);
 applyMiddleware(errorHandlers, router);
@@ -29,5 +44,5 @@ const server = http.createServer(router);
 
 
 server.listen(PORT, () => 
-	console.log(`Server is running http://localhost:${PORT}...`)
+    console.log(`Server is running on PORT:${PORT}...`)
 );
