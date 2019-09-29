@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { TicTacToe } from "./model/TicTacToe";
+import * as controller from './TTTController';
 
 export default [
   {
@@ -30,18 +30,14 @@ export default [
     method: "post",
     handler: async (req: Request, res: Response) => {
 
-      let json = TicTacToe.updateGameStateFromJson(req.body.grid);
-      // console.log(json);
-      res
-        // .sendStatus(200)
-        .send(json);
+  
     }
   },
   {
     path: "/ttt/listgames",
     method: "get",
     handler: async (req: Request, res: Response) => {
-      //TODO: List all games played by this user.
+      controller.listGames(res);
     }
   },
   {

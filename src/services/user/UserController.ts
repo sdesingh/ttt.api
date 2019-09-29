@@ -1,5 +1,5 @@
-import User, { IUser } from './model/User';
-import { Response } from 'express';
+import User from './model/User';
+import { Request, Response } from 'express';
 
 
 
@@ -21,7 +21,7 @@ export function addUser(document: any, res: Response) {
       }    
       else 
       {
-        res.send("User created successfully. Check verification email.");
+        res.json( {status: "OK", message: "User created sucessfully."} );
 
         // TODO: Send verification email.
       }
@@ -29,21 +29,38 @@ export function addUser(document: any, res: Response) {
   });
 }
 
-export function getUser(userEmail: string, res: Response) {
+export function login(username: string, password: string, req: Request, res: Response) {
 
-  User.findOne(
 
-    { email: userEmail }, 
+  User.findOne({ username: username })
+    .select('+password')
+    .then(
+      (user) => {
 
-    (err, user: IUser) => {
+        if(!user){
+          res.json( {status: "ERROR", message: "Can't find user." } )
+        }
+        else if(!(user.password === password)){
+          
+          res.json( {status: "ERROR", message: "Incorrect password."} )
+        }
+        else {
+          req.session!.username = user.username;
+          res.json( {status: "OK", message: "Successfully logged in."} )
+        }
+      }
 
-      if(err || !user) 
-        res.json({error: "Not found..."});
+    )
+}
+
+export function logout(req: Request, res: Response) {
   
-      else 
-        res.json(user);
-      
-    }
-  )
+  if (req.session!.username && req.cookies.game) {
+    res.clearCookie('game');
+    res.json( {status: "OK", message: "Logged out successfully."} )
+  } 
+  else {
+    res.json( {status: "ERROR", message: "User was never logged in."})
+  }
 
 }

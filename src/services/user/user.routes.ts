@@ -22,7 +22,10 @@ export default [
     path: "/login",
     method: "post",
     handler: async (req: Request, res: Response) => {
-      controller.getUser(req.body.email, res);
+      const username = req.body.username;
+      const password = req.body.password;
+
+      controller.login(username, password, req, res);
     }
   },
   {
@@ -30,6 +33,7 @@ export default [
     method: "post",
     handler: async (req: Request, res: Response) => {
       //TODO: Logout user.
+      controller.logout(req, res);
     }
   },
 
