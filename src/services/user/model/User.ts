@@ -9,8 +9,9 @@ export interface IUser extends Document {
     email: string,
     password: string,
 
-
+    verificationKey: string,
     isVerified: boolean,
+    currentGame: IGame,
     games: IGame[]
     gamesWon: number,
     gamesLost: number, 
@@ -33,6 +34,10 @@ const UserSchema: Schema = new Schema(
       type: String, 
       required: true, 
       select: false 
+    },
+    currentGame: {
+      type: Schema.Types.ObjectId,
+      ref: 'Game'
     },
     gamesWon: {
       type: Number,

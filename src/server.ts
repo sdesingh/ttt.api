@@ -6,6 +6,7 @@ import middleware from "./middleware";
 import errorHandlers from "./middleware/errorHandlers";
 import mongoose from 'mongoose';
 import keys from './config/keys.json';
+import path from 'path';
 
 
 process.on("uncaughtException", e => {
@@ -36,9 +37,13 @@ mongoose
   .catch(err => console.log(err));
 
 
+console.log(path.join(__dirname, 'services/client'))
 applyMiddleware(middleware, router);
 applyRoutes(routes, router);
 applyMiddleware(errorHandlers, router);
+
+router.use(express.static(path.join(__dirname, 'services/client')));
+
 
 const { PORT = 3000} = process.env;
 const server = http.createServer(router);

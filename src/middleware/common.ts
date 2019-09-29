@@ -4,6 +4,7 @@ import parser from "body-parser";
 import compression from "compression";
 import cookieSession from 'cookie-session';
 import cookieParser from 'cookie-parser';
+import history from 'connect-history-api-fallback';
 
 export const handleCors = (router: Router) => 
 	router.use(cors({credentials: true, origin: true}));
@@ -20,6 +21,10 @@ export const handleCookieParsing = (router: Router) => {
 export const handleCompression = (router: Router) => {
 	router.use(compression());
 };
+
+export const handleSPARouting = (router: Router) => {
+  router.use(history({  index: '/dist/services/client/index.html' }));
+}
 
 export const handleCookies = (router: Router) => {
 	router.use(cookieSession({

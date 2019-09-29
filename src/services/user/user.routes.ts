@@ -15,7 +15,7 @@ export default [
     path: "/verify",
     method: "post",
     handler: async (req: Request, res: Response) => {
-      //TODO: Verify user with the given key.
+      controller.verifyUser(req, res);
     }
   },
   {

@@ -30,3 +30,11 @@ export class HTTP404Error extends HTTPClientError {
 		super(message);
 	}	
 }
+
+export function ERROR_RESPONSE(message: string): any {
+  return {status: "ERROR", message: message};
+}
+
+export function OK_RESPONSE(message: string): any {
+  return {status: "OK", message: message};
+}

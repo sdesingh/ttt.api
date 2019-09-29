@@ -1,12 +1,14 @@
 import { Request, Response } from "express";
 import * as controller from './TTTController';
+import { isUserLoggedIn } from '../user/UserController';
+import { ERROR_RESPONSE, OK_RESPONSE } from "../../utils/httpsErrors";
 
 export default [
   {
     path: "/ttt",
     method: "get",
     handler: async (req: Request, res: Response) => {
-      res.render("pages/index.ejs", { user: null, date: null});
+      res.json({message: "Getting the home page!"})
     }
   },
   {
@@ -29,7 +31,13 @@ export default [
     path: "/ttt/play",
     method: "post",
     handler: async (req: Request, res: Response) => {
-
+      
+      // Check if user is logged in.
+      if(!isUserLoggedIn(req))
+        res.json(ERROR_RESPONSE("You need to log in to be able to play."))
+      
+      else
+        controller.makeMove(req, res);
   
     }
   },
@@ -52,6 +60,18 @@ export default [
     method: "get",
     handler: async (req: Request, res: Response) => {
       //TODO: List all games played by this user.
+    }
+  },
+  {
+    path: "/ttt/creategame",
+    method: "post",
+    handler: async (req: Request, res: Response) => {
+      if(controller.createNewGame(req)){
+        res.json(OK_RESPONSE("Game created successfully"));
+      }
+      else{
+        res.json(ERROR_RESPONSE("Unable to create game."));
+      }
     }
   }
 ]

@@ -4,6 +4,7 @@ import {
 	handleCompression,
 	handleCookies,
 	handleCookieParsing,
+  handleSPARouting,
 } from './common';
 
 export default [handleCompression, handleCors, handleBodyRequestParsing, handleCookies, handleCookieParsing]
