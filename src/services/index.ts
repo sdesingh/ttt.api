@@ -1,5 +1,7 @@
 import tttRoutes from './ttt/ttt.routes';
 import userRoutes from './user/user.routes';
+import { Request, Response } from 'express';
+import path from 'path';
 
 export default [ 
   // {
@@ -13,13 +15,13 @@ export default [
   // },
   ...userRoutes,
   ...tttRoutes,
-  // {
-  //   path: "*",
-  //   method: "get",
-  //   handler: async (req: Request, res: Response) => {
-  //     res.sendFile(path.join(__dirname + '/client/index.html'));
-  //   }
-  // }
+  {
+    path: "*",
+    method: "get",
+    handler: async (req: Request, res: Response) => {
+      res.sendFile(path.join(__dirname + '/client/index.html'));
+    }
+  }
 
   
 ];
