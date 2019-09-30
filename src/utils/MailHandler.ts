@@ -9,6 +9,9 @@ export class MailHandler {
     host: settings.hostname,
     port: settings.port,
     secure: false, // true for 465, false for other ports
+    tls: {
+      rejectUnauthorized: false
+    }
   });
 
   public static sendMail(from: string, to: string, subject: string, body: string) {
