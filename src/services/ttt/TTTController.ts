@@ -137,8 +137,16 @@ export async function makeMove(req: Request, res: Response): Promise<void> {
         }
         else { 
 
+          if(user.currentGame == null){
+            console.log('no game found');
+            await createNewGame(req);
+            await makeMove(req, res);
+            return;
+          }
+
           // Check if this is the first time logging in.
-          if(TicTacToe.isGameOver(user.currentGame) || !user.currentGame){
+          if(TicTacToe.isGameOver(user.currentGame)){
+            console.log('new game');
             await createNewGame(req);
             await makeMove(req, res);
             return;
