@@ -37,12 +37,12 @@ mongoose
   .catch(err => console.log(err));
 
 
-console.log(path.join(__dirname, 'services/client'))
+router.use(express.static(path.join(__dirname, 'services/client')));
 applyMiddleware(middleware, router);
 applyRoutes(routes, router);
 applyMiddleware(errorHandlers, router);
 
-router.use(express.static(path.join(__dirname, 'services/client')));
+
 
 
 const { PORT = 3000} = process.env;

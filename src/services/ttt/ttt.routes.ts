@@ -2,15 +2,9 @@ import { Request, Response } from "express";
 import * as controller from './TTTController';
 import { isUserLoggedIn } from '../user/UserController';
 import { ERROR_RESPONSE, OK_RESPONSE } from "../../utils/httpsErrors";
+import path from 'path'
 
 export default [
-  {
-    path: "/ttt",
-    method: "get",
-    handler: async (req: Request, res: Response) => {
-      res.json({message: "Getting the home page!"})
-    }
-  },
   {
     path: "/ttt",
     method: "post",
