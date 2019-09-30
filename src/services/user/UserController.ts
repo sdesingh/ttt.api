@@ -82,6 +82,9 @@ export function login(username: string, password: string, req: Request, res: Res
         if(!user){
           res.json(ERROR_RESPONSE("Unable to log in. Please check input."))
         }
+        else if(!user.isVerified){
+          res.json(ERROR_RESPONSE("User is not verified."))
+        }
         else if(!(user.password === password)){
           
           res.json(ERROR_RESPONSE("Unable to log in. Please check input."))
