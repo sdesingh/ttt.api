@@ -59,12 +59,8 @@ export default [
     path: "/ttt/creategame",
     method: "post",
     handler: async (req: Request, res: Response) => {
-      if(controller.createNewGame(req)){
-        res.json(OK_RESPONSE("Game created successfully"));
-      }
-      else{
-        res.json(ERROR_RESPONSE("Unable to create game."));
-      }
+      controller.createNewGame(req)
+      res.json(OK_RESPONSE("Game created successfully"));
     }
   }
 ]
