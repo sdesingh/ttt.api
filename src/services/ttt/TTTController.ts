@@ -5,25 +5,108 @@ import User from '../user/model/User';
 import { ERROR_RESPONSE } from '../../utils/httpsErrors';
 
 
-export function listGames(res: Response): void {
+export function listGames(req: Request, res: Response): void {
 
-  Game.find(
 
-    (err, games) => {
+  if(!isUserLoggedIn(req)){
+    res.json(ERROR_RESPONSE("You need to be logged in."));
+  }
 
-      if(err){
-        res.json( {status: "ERROR", message: "Unable to list games."} )
+  const username = req.session!.username;
+
+  User
+    .findOne({ username: username })
+    .populate('games')
+    .exec(
+      (err, user) => {
+
+
+        if(err || !user) {
+          res.json(ERROR_RESPONSE("Unable to list games for this user."));
+        }
+
+        const clientGames: any[] = [];
+
+        user!.games.forEach(game => {
+
+          clientGames.push({
+            id: game._id,
+            start_date: game.start_date
+          })
+
+        });
+
+        res.json({
+          status: "OK",
+          games: clientGames
+        })
+
       }
-      else {
-        res.json( {status: "OK", games: games})
-      }
-
-    }
   )
-    
+
+
 
 }
 
+
+export function getGame(req: Request, res: Response): void {
+
+  if(!isUserLoggedIn(req)){
+    res.json(ERROR_RESPONSE("You need to be logged in to check game states."));
+  }
+
+  const gameID = req.body.gameID;
+
+  Game
+    .findById(gameID)
+    .exec(
+      (err, game) => {
+        if(err || !game) {
+          res.json(ERROR_RESPONSE("Unable to find game with that ID."));
+        }
+        else {
+          res.json({
+            status: "OK",
+            grid: game.grid,
+            winner: game.winner
+          })
+        }
+      }
+    )
+
+}
+
+
+export function getScore(req: Request, res: Response): void {
+
+  if(!isUserLoggedIn(req)){
+    res.json(ERROR_RESPONSE("You need to be logged in to check your score."));
+  }
+
+
+  const username = req.session!.username;
+
+  User
+    .findOne({ username: username })
+    .exec(
+      (err, user) => {
+
+        if(err || !user){
+          res.json(ERROR_RESPONSE("An error occured while finding this user's score."))
+        }
+        else{
+          res.json({
+            status: "OK",
+            human: user.gamesWon,
+            wopr: user.gamesLost,
+            tie: user.gamesTied
+          })
+        }
+
+      }
+    )
+
+}
 
 export function makeMove(req: Request, res: Response): void {
 

@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 import * as controller from './TTTController';
 import { isUserLoggedIn } from '../user/UserController';
 import { ERROR_RESPONSE, OK_RESPONSE } from "../../utils/httpsErrors";
-import path from 'path'
 
 export default [
   {
@@ -39,21 +38,21 @@ export default [
     path: "/ttt/listgames",
     method: "get",
     handler: async (req: Request, res: Response) => {
-      controller.listGames(res);
+      controller.listGames(req, res);
     }
   },
   {
     path: "/ttt/getgame",
     method: "get",
     handler: async (req: Request, res: Response) => {
-      //TODO: List all games played by this user.
+      controller.getGame(req, res);
     }
   },
   {
     path: "/ttt/getscore",
     method: "get",
     handler: async (req: Request, res: Response) => {
-      //TODO: List all games played by this user.
+      controller.getScore(req, res);
     }
   },
   {
