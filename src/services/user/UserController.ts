@@ -28,12 +28,13 @@ export function addUser(document: any, res: Response) {
         res.json(OK_RESPONSE("Signed up successfully."));
 
         // Send verification email.
+        const key = user.verificationKey;
 
         MailHandler.sendMail(
           "Tic Tac Toe <hw-0.cloud.compass.cs.stonybrook.edu>",
           user.email,
           "Verification Key",
-          `validation key: <${user.verificationKey}>`
+          `validation key: <${key}>`
         );
       }
       
