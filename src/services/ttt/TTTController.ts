@@ -106,7 +106,7 @@ export function getScore(req: Request, res: Response): void {
 
 }
 
-export function makeMove(req: Request, res: Response): void {
+export async function makeMove(req: Request, res: Response): Promise<void> {
 
   // Get user.
 
@@ -114,7 +114,7 @@ export function makeMove(req: Request, res: Response): void {
     .findOne({username: req.session!.username })
     .populate('currentGame')
     .exec(
-      (err, user) => {
+      async (err, user) => {
         
         const moveIndex = req.body.move;
 
@@ -132,11 +132,13 @@ export function makeMove(req: Request, res: Response): void {
 
           // Check if this is the first time logging in.
           if(!user.currentGame){
-            createNewGame(req);
+            await createNewGame(req);
+            makeMove(req, res);
+            return;
           }
           
           let game = user!.currentGame;
-          
+
 
           const result = TicTacToe.makeMove(moveIndex, "X", game, user);
 
@@ -150,7 +152,7 @@ export function makeMove(req: Request, res: Response): void {
           });
 
           if(TicTacToe.isGameOver(game)){
-            createNewGame(req);
+            await createNewGame(req);
           }
         }
       }
@@ -168,7 +170,7 @@ export function makeMove(req: Request, res: Response): void {
   // If the game ends, create a new game for the user.
 }
 
-export function createNewGame(req: Request): void {
+export async function createNewGame(req: Request): Promise<void> {
 
 
   // Check that the user is logged in.
@@ -179,17 +181,16 @@ export function createNewGame(req: Request): void {
   // Create a new game.
   const username = req.session!.username
   
-  User
+  await User
     .findOne(  { username:  username } )
     .populate('games')
     .populate('currentGame')
     .exec(
 
-    (err, user) => {
+    async (err, user) => {
 
       if(!user || err){
         console.log(`An error occurred while try to create game for [${username}].`);
-        return false;
       }
       else {
 
@@ -205,11 +206,9 @@ export function createNewGame(req: Request): void {
         user.markModified('games');
         user.markModified('currentGame');
 
-        newGame.save();
-        user.save()
+        await newGame.save();
+        await user.save()
 
-        // Game created successfully.
-        return true;
         
       }
 
