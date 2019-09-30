@@ -31,7 +31,7 @@ export function addUser(document: any, res: Response) {
         const key = user.verificationKey;
 
         MailHandler.sendMail(
-          "Tic Tac Toe <hw-0.cloud.compass.cs.stonybrook.edu>",
+          "Tic Tac Toe <tictactoe>",
           user.email,
           "Verification Key",
           `validation key: <${key}>`
