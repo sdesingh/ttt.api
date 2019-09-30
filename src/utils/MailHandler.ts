@@ -4,25 +4,19 @@ import Mail from 'nodemailer/lib/mailer';
 
 export class MailHandler {
 
-  private hostname = settings.hostname;
-  private port = settings.port;
-  private transport: Mail;
 
-  static instance: MailHandler = MailHandler.constructor();
+  private static transport: Mail = mailer.createTransport({
+    host: settings.hostname,
+    port: settings.port,
+    secure: false, // true for 465, false for other ports
+    tls: {
+      rejectUnauthorized: false
+    }
+  });
 
-  private constructor(){
+  public static sendMail(from: string, to: string, subject: string, body: string) {
 
-    this.transport = mailer.createTransport({
-      host: this.hostname,
-      port: this.port,
-      secure: false, // true for 465, false for other ports
-    });
-
-  }
-
-  public async sendMail(from: string, to: string, subject: string, body: string): Promise<void>{
-
-    await this.transport.sendMail({
+    MailHandler.transport.sendMail({
       from: from, // sender address
       to: to, // list of receivers
       subject: subject, // Subject line
