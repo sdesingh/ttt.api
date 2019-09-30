@@ -120,6 +120,7 @@ export function makeMove(req: Request, res: Response): void {
 
         if(err || !user || !user.currentGame) {
           res.json(ERROR_RESPONSE("Unable to make move."));
+          console.log("Current game not found??")
         }
         else if(moveIndex == null){
           res.json({
@@ -137,16 +138,15 @@ export function makeMove(req: Request, res: Response): void {
           game.save();
           user.save();
 
-
-          if(TicTacToe.isGameOver(game)){
-            createNewGame(req);
-          }
-
           res.json({
             status: "OK",
             grid: game.grid,
             winner: game.winner
           });
+
+          if(TicTacToe.isGameOver(game)){
+            createNewGame(req);
+          }
         }
       }
     )

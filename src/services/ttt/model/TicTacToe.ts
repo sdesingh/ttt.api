@@ -67,6 +67,7 @@ export class TicTacToe {
       // Update player wins.
       game.winner = "X";
       user.gamesWon += 1;
+      return;
     }
     // Player didn't win.
     else {
@@ -87,7 +88,12 @@ export class TicTacToe {
         // AI Won. Update player losses.
         user.gamesLost += 1;
         game.winner = "O";
+        return;
 
+      }
+      else if(this.isGameOver(game)){
+        user.gamesTied += 1;
+        return;
       }
       else {
         // Game continues.
@@ -103,11 +109,15 @@ export class TicTacToe {
     const grid = game.grid;
 
 
-    if(grid[0] == playerChar && grid[0] == grid[4] && grid[4] == grid[8])
+    if(grid[0] == playerChar && grid[0] == grid[4] && grid[4] == grid[8]){
+      console.log('diag1');
       return true;
+    }
+    else if(grid[2] == playerChar && grid[2] == grid[4] && grid[4] == grid[6]){
+      console.log('diag2');
+      return true;
+    }
 
-    else if(grid[2] == playerChar && grid[2] == grid[4] && grid[4] == grid[8])
-      return true;
 
     else {
 
@@ -116,12 +126,14 @@ export class TicTacToe {
         // Check horizontals.
         let index = i * 3
         if(grid[index] == playerChar && grid[index] == grid[index + 1] && grid[index] == grid[index + 2]){
+          console.log('horiz')
           return true;
         }
 
         // Check vertically.
         index = i;
         if(grid[index] == playerChar && grid[index] == grid[index + 3] && grid[index] == grid[index + 6]){
+          console.log('vert')
           return true;
         }
 
