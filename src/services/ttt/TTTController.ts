@@ -56,7 +56,7 @@ export function getGame(req: Request, res: Response): void {
     res.json(ERROR_RESPONSE("You need to be logged in to check game states."));
   }
 
-  const gameID = req.body.gameID;
+  const gameID = req.body.id;
 
   Game
     .findById(gameID)
