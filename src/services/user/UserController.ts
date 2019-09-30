@@ -92,11 +92,6 @@ export function login(username: string, password: string, req: Request, res: Res
         else {
           req.session!.username = user.username;
 
-          // Check if this is the first time logging in.
-          if(!user.currentGame){
-            createNewGame(req);
-          }
-
           res.json(OK_RESPONSE("Successfully logged in."))
         }
       }

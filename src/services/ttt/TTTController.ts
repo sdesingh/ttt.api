@@ -118,11 +118,8 @@ export function makeMove(req: Request, res: Response): void {
         
         const moveIndex = req.body.move;
 
-        if(err || !user || !user.currentGame) {
+        if(err || !user) {
           res.json(ERROR_RESPONSE("Unable to make move."));
-          console.log("Current game not found??")
-          console.log(user)
-          console.log(err)
         }
         else if(moveIndex == null){
           res.json({
@@ -131,9 +128,15 @@ export function makeMove(req: Request, res: Response): void {
             winner: user!.currentGame.winner
           })
         }
-        else {
+        else { 
+
+          // Check if this is the first time logging in.
+          if(!user.currentGame){
+            createNewGame(req);
+          }
           
           let game = user!.currentGame;
+          
 
           const result = TicTacToe.makeMove(moveIndex, "X", game, user);
 
