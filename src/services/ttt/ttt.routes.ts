@@ -35,21 +35,21 @@ export default [
     }
   },
   {
-    path: "/ttt/listgames",
+    path: "/listgames",
     method: "get",
     handler: async (req: Request, res: Response) => {
       controller.listGames(req, res);
     }
   },
   {
-    path: "/ttt/getgame",
+    path: "/getgame",
     method: "get",
     handler: async (req: Request, res: Response) => {
       controller.getGame(req, res);
     }
   },
   {
-    path: "/ttt/getscore",
+    path: "/getscore",
     method: "get",
     handler: async (req: Request, res: Response) => {
       controller.getScore(req, res);
