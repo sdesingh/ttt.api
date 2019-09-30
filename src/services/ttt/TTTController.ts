@@ -121,6 +121,8 @@ export function makeMove(req: Request, res: Response): void {
         if(err || !user || !user.currentGame) {
           res.json(ERROR_RESPONSE("Unable to make move."));
           console.log("Current game not found??")
+          console.log(user)
+          console.log(err)
         }
         else if(moveIndex == null){
           res.json({
