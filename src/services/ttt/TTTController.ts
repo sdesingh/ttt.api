@@ -7,7 +7,8 @@ import { ERROR_RESPONSE } from '../../utils/httpsErrors';
 
 export function listGames(req: Request, res: Response): void {
 
-
+  console.log('listing games')
+  
   if(!isUserLoggedIn(req)){
     res.json(ERROR_RESPONSE("You need to be logged in."));
   }
@@ -49,6 +50,8 @@ export function listGames(req: Request, res: Response): void {
 
 export function getGame(req: Request, res: Response): void {
 
+  console.log('getting game')
+
   if(!isUserLoggedIn(req)){
     res.json(ERROR_RESPONSE("You need to be logged in to check game states."));
   }
@@ -76,6 +79,8 @@ export function getGame(req: Request, res: Response): void {
 
 
 export function getScore(req: Request, res: Response): void {
+
+  console.log('getting score')
 
   if(!isUserLoggedIn(req)){
     res.json(ERROR_RESPONSE("You need to be logged in to check your score."));
@@ -109,9 +114,11 @@ export function getScore(req: Request, res: Response): void {
 export async function makeMove(req: Request, res: Response): Promise<void> {
 
   // Get user.
+  console.log('making move');
 
   User
     .findOne({username: req.session!.username })
+    .populate('games')
     .populate('currentGame')
     .exec(
       async (err, user) => {
@@ -131,7 +138,7 @@ export async function makeMove(req: Request, res: Response): Promise<void> {
         else { 
 
           // Check if this is the first time logging in.
-          if(!user.currentGame){
+          if(!user.currentGame || TicTacToe.isGameOver(user.currentGame)){
             await createNewGame(req);
             await makeMove(req, res);
             return;
@@ -143,11 +150,6 @@ export async function makeMove(req: Request, res: Response): Promise<void> {
 
           await game.save();
           await user.save();
-
-          if(TicTacToe.isGameOver(game)){
-            await createNewGame(req);
-          }
-
 
           res.json({
             status: "OK",
@@ -171,6 +173,8 @@ export async function makeMove(req: Request, res: Response): Promise<void> {
 }
 
 export async function createNewGame(req: Request): Promise<void> {
+
+  console.log(`creating new game`);
 
 
   // Check that the user is logged in.
@@ -198,7 +202,6 @@ export async function createNewGame(req: Request): Promise<void> {
         newGameDoc.user = user._id;
         
         const newGame = new Game(newGameDoc);
-
 
         user.games.push(newGame);
         user.currentGame = newGame;

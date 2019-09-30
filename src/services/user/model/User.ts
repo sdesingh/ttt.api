@@ -37,7 +37,8 @@ const UserSchema: Schema = new Schema(
     },
     currentGame: {
       type: Schema.Types.ObjectId,
-      ref: 'Game'
+      ref: 'Game',
+      default: null
     },
     gamesWon: {
       type: Number,

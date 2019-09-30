@@ -7,6 +7,8 @@ import { MailHandler } from '../../utils/MailHandler';
 
 export function addUser(document: any, res: Response) {
 
+  console.log('registering user')
+
   // Clean up user fields provided by client.
   delete document.isVerified
   delete document.verificationKey
@@ -39,6 +41,9 @@ export function addUser(document: any, res: Response) {
 }
 
 export function verifyUser(req: Request, res: Response) {
+
+  console.log('verifying user')
+
   const email = req.body.email;
   const key = req.body.key;
 
@@ -72,6 +77,7 @@ export function verifyUser(req: Request, res: Response) {
 
 export function login(username: string, password: string, req: Request, res: Response) {
 
+  console.log('loggin in user')
 
   User
     .findOne({ username: username })
@@ -100,6 +106,8 @@ export function login(username: string, password: string, req: Request, res: Res
 }
 
 export function logout(req: Request, res: Response) {
+
+  console.log('logging out user');
   
   if (isUserLoggedIn(req)) {
     res.clearCookie('game');
