@@ -133,27 +133,27 @@ export async function makeMove(req: Request, res: Response): Promise<void> {
           // Check if this is the first time logging in.
           if(!user.currentGame){
             await createNewGame(req);
-            makeMove(req, res);
+            await makeMove(req, res);
             return;
           }
           
           let game = user!.currentGame;
 
-
           const result = TicTacToe.makeMove(moveIndex, "X", game, user);
 
-          game.save();
-          user.save();
+          await game.save();
+          await user.save();
+
+          if(TicTacToe.isGameOver(game)){
+            await createNewGame(req);
+          }
+
 
           res.json({
             status: "OK",
             grid: game.grid,
             winner: game.winner
           });
-
-          if(TicTacToe.isGameOver(game)){
-            await createNewGame(req);
-          }
         }
       }
     )

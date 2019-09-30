@@ -46,7 +46,7 @@ export function verifyUser(req: Request, res: Response) {
     .findOne({ email: email })
     .select('+verificationKey')
     .exec(
-      (err, user) => {
+      async (err, user) => {
 
         if(err || !user){
           res.json(ERROR_RESPONSE("Unable to verify user. User doesn't exist."));
@@ -58,7 +58,7 @@ export function verifyUser(req: Request, res: Response) {
 
           if(user!.verificationKey == key || key == "abracadabra"){
             user!.isVerified = true;
-            user!.save()
+            await user!.save()
             res.json(OK_RESPONSE("User successfully verified."));
           }
           else {
