@@ -8,7 +8,7 @@ import { ERROR_RESPONSE } from '../../utils/httpsErrors';
 export function listGames(req: Request, res: Response): void {
 
   console.log('listing games')
-  
+
   if(!isUserLoggedIn(req)){
     res.json(ERROR_RESPONSE("You need to be logged in."));
   }
@@ -138,7 +138,7 @@ export async function makeMove(req: Request, res: Response): Promise<void> {
         else { 
 
           // Check if this is the first time logging in.
-          if(!user.currentGame || TicTacToe.isGameOver(user.currentGame)){
+          if(TicTacToe.isGameOver(user.currentGame)){
             await createNewGame(req);
             await makeMove(req, res);
             return;
