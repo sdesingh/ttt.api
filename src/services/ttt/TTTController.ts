@@ -116,58 +116,50 @@ export async function makeMove(req: Request, res: Response): Promise<void> {
   // Get user.
   console.log('making move');
 
-  User
-    .findOne({username: req.session!.username })
-    .populate('games')
-    .populate('currentGame')
-    .exec(
-      async (err, user) => {
-        
-        const moveIndex = req.body.move;
+  let user = await User.findOne({username: req.session!.username }).populate('currentGame')
 
-        if(err || !user) {
-          res.json(ERROR_RESPONSE("Unable to make move."));
-        }
-        else if(moveIndex == null){
-          res.json({
-            status: "OK",
-            grid: user!.currentGame.grid,
-            winner: user!.currentGame.winner
-          })
-        }
-        else { 
+  const moveIndex = req.body.move;
 
-          if(user.currentGame == null){
-            console.log('no game found');
-            await createNewGame(req);
-            await makeMove(req, res);
-            return;
-          }
+  if(!user) {
+    res.json(ERROR_RESPONSE("Unable to make move."));
+  }
+  else if(moveIndex == null){
+    res.json({
+      status: "OK",
+      grid: user!.currentGame.grid,
+      winner: user!.currentGame.winner
+    })
+  }
+  else { 
 
-          // Check if this is the first time logging in.
-          if(TicTacToe.isGameOver(user.currentGame)){
-            console.log('new game');
-            await createNewGame(req);
-            await makeMove(req, res);
-            return;
-          }
-          
-          let game = user!.currentGame;
+    if(user.currentGame == null){
+      console.log('no game found');
+      await createNewGame(req);
+      makeMove(req, res);
+      return;
+    }
 
-          const result = TicTacToe.makeMove(moveIndex, "X", game, user);
+    // Check if this is the first time logging in.
+    if(TicTacToe.isGameOver(user.currentGame)){
+      console.log('new game');
+      await createNewGame(req);
+      makeMove(req, res);
+      return;
+    }
+    
+    let game = user!.currentGame;
 
-          await game.save();
-          await user.save();
+    const result = TicTacToe.makeMove(moveIndex, "X", game, user);
 
-          res.json({
-            status: "OK",
-            grid: game.grid,
-            winner: game.winner
-          });
-        }
-      }
-    )
+    await game.save();
+    await user.save();
 
+    res.json({
+      status: "OK",
+      grid: game.grid,
+      winner: game.winner
+    });
+    }
   
 
 
@@ -180,7 +172,7 @@ export async function makeMove(req: Request, res: Response): Promise<void> {
   // If the game ends, create a new game for the user.
 }
 
-export async function createNewGame(req: Request): Promise<void> {
+export async function createNewGame(req: Request) {
 
   console.log(`creating new game`);
 
@@ -188,45 +180,34 @@ export async function createNewGame(req: Request): Promise<void> {
   // Check that the user is logged in.
   if(!isUserLoggedIn(req)){
     console.log("user not logged in")
+    return Promise.resolve()
   }
 
   // Create a new game.
   const username = req.session!.username
   
-  await User
-    .findOne(  { username:  username } )
-    .populate('games')
-    .populate('currentGame')
-    .exec(
+  let user = await User.findOne(  { username:  username } );
 
-    async (err, user) => {
+  if(!user){
+    console.log(`An error occurred while try to create game for [${username}].`);
 
-      if(!user || err){
-        console.log(`An error occurred while try to create game for [${username}].`);
-      }
-      else {
+  }
+  else {
 
-        const newGameDoc = TicTacToe.createNewGame();
-        newGameDoc.user = user._id;
-        
-        const newGame = new Game(newGameDoc);
+    const newGameDoc = TicTacToe.createNewGame();
+    newGameDoc.user = user._id;
+    const newGame = new Game(newGameDoc);
 
-        user.games.push(newGame);
-        user.currentGame = newGame;
+    await newGame.save()
 
-        user.markModified('games');
-        user.markModified('currentGame');
+    user.currentGame = newGame._id;
+    user.games.push(newGame._id);
+    await user.save()
 
-        await newGame.save();
-        await user.save()
-
-        
-      }
+  }
 
 
-    }
     
-
-  )
+    
 
 }

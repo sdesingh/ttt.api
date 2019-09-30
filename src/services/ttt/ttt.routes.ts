@@ -60,7 +60,7 @@ export default [
     method: "post",
     handler: async (req: Request, res: Response) => {
       controller.createNewGame(req)
-      res.json(OK_RESPONSE("Game created successfully"));
+      
     }
   }
 ]

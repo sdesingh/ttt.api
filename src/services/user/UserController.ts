@@ -30,12 +30,12 @@ export function addUser(document: any, res: Response) {
         // Send verification email.
         const key = user.verificationKey;
 
-        MailHandler.sendMail(
-          "Tic Tac Toe <tictactoe>",
-          user.email,
-          "Verification Key",
-          `validation key: <${key}>`
-        );
+        // MailHandler.sendMail(
+        //   "Tic Tac Toe <tictactoe>",
+        //   user.email,
+        //   "Verification Key",
+        //   `validation key: <${key}>`
+        // );
       }
       
   });
