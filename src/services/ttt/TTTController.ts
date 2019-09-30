@@ -44,8 +44,6 @@ export function listGames(req: Request, res: Response): void {
       }
   )
 
-
-
 }
 
 
@@ -120,7 +118,7 @@ export function makeMove(req: Request, res: Response): void {
         
         const moveIndex = req.body.move;
 
-        if(err || !user) {
+        if(err || !user || !user.currentGame) {
           res.json(ERROR_RESPONSE("Unable to make move."));
         }
         else if(moveIndex == null){
