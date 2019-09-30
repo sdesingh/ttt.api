@@ -165,22 +165,22 @@ export function makeMove(req: Request, res: Response): void {
   // If the game ends, create a new game for the user.
 }
 
-export function createNewGame(req: Request): boolean {
+export function createNewGame(req: Request): void {
 
 
   // Check that the user is logged in.
   if(!isUserLoggedIn(req)){
     console.log("user not logged in")
-    return false;
   }
 
   // Create a new game.
   const username = req.session!.username
   
-  User.findOne(
-
-    // Find user.
-    { username:  username },
+  User
+    .findOne(  { username:  username } )
+    .populate('games')
+    .populate('currentGame')
+    .exec(
 
     (err, user) => {
 
@@ -195,23 +195,15 @@ export function createNewGame(req: Request): boolean {
         
         const newGame = new Game(newGameDoc);
 
-        newGame.save(
-
-          (err, game) => {
-
-
-            if(err) {
-              console.log(`An error occurred while try to create game for [${username}].`);
-              console.log(`Error: ${err}`)
-              return false;
-            }
-
-          }
-        );
 
         user.games.push(newGame);
         user.currentGame = newGame;
-        user.save((err, user) => {})
+
+        user.markModified('games');
+        user.markModified('currentGame');
+
+        newGame.save();
+        user.save()
 
         // Game created successfully.
         return true;
@@ -223,10 +215,5 @@ export function createNewGame(req: Request): boolean {
     
 
   )
-
-  return false;
-
-
-
 
 }
