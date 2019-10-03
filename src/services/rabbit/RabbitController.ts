@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import amqp, { Connection, Channel, Replies, ConsumeMessage } from 'amqplib';
+import Bluebird from 'bluebird';
 
   
 
@@ -26,14 +27,18 @@ export function connectChannel(callback: Function) {
 export async function listen(keys: string[], callback: Function){
 
   connectChannel(
-    (channel: Channel, queue : Replies.AssertQueue) => {
+    async (channel: Channel, queue : Replies.AssertQueue) => {
+      
+      let tasks : Bluebird<Replies.Empty>[]= []
 
       keys.forEach(
 
         (key, i) => {
-          channel.bindQueue(queue.queue, 'hw4', key);
+          tasks.push(channel.bindQueue(queue.queue, 'hw4', key));
         }
       )
+
+      await Promise.all(tasks);
     
       channel.consume(queue.queue, 
         (msg: ConsumeMessage|null) => {
