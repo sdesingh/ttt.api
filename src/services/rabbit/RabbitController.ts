@@ -28,23 +28,23 @@ export async function listen(keys: string[], callback: Function){
 
   connectChannel(
     async (channel: Channel, queue : Replies.AssertQueue) => {
-      
-      let tasks : Bluebird<Replies.Empty>[]= []
 
       keys.forEach(
 
         (key, i) => {
-          tasks.push(channel.bindQueue(queue.queue, 'hw4', key));
+          channel.bindQueue(queue.queue, 'hw4', key);
         }
       )
-
-      await Promise.all(tasks);
     
       channel.consume(queue.queue, 
         (msg: ConsumeMessage|null) => {
           if(msg != null){
+            console.log(msg);
             callback(msg.content.toString());
           }
+        },
+        {
+          noAck: true
         }
       )
     }
