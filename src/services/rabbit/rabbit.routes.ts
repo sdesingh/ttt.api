@@ -15,7 +15,7 @@ export default [
         message += msg;
         total++;
         if(total == keys.length){
-          console.log(message);
+          console.log(`Message: ${message} | Keys: ${keys}`);
           res.json({msg: message});
         }
       });
