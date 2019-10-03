@@ -8,9 +8,16 @@ export default [
     method: "post",
     handler: async (req: Request, res: Response) => {
       const keys : string[] = req.body.keys;
+      let total = 0;
+      let message = "";
       console.log('Listening for ' + keys);
       controller.listen(keys, (msg: string) => {
-        res.json({msg: msg});
+        message += msg;
+        total++;
+        if(total == keys.length){
+          console.log(message);
+          res.json({msg: message});
+        }
       });
     },
   },
