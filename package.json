@@ -24,6 +24,7 @@
     "@types/mongoose": "^5.5.18",
     "@types/node": "^12.7.2",
     "@types/request-promise": "^4.1.44",
+    "amqplib": "^0.5.5",
     "compression": "^1.7.4",
     "connect-history-api-fallback": "^1.6.0",
     "cookie-parser": "^1.4.4",
@@ -43,6 +44,7 @@
     "typescript": "^3.6.2"
   },
   "devDependencies": {
+    "@types/amqplib": "^0.5.13",
     "@types/nodemailer": "^6.2.1"
   }
 }
