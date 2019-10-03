@@ -16,8 +16,8 @@ export default [
         if(!sent){
           console.log(`Message: ${msg} | Keys: ${keys}`);
           res.json({msg: msg});
+          sent = true;
         }
-
         
       });
     },
