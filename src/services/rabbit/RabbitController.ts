@@ -3,65 +3,62 @@ import amqp, { Connection, Channel, Replies, ConsumeMessage } from 'amqplib';
 
   
 
-let channel : Channel;
-let assertQueue : Replies.AssertQueue;
-
-export function initializeRabbitConnection() {
+export function connectChannel(callback: Function) {
 
   amqp.connect("amqp://localhost", 
   
     async (err: any, connection: Connection) => {
-      
+    
       if(err){
         console.log('An error has occurred while connecting to rabbit.');
       }
       else {
-        channel = await connection.createChannel();
-
+        const channel = await connection.createChannel();
+        console.log('Created connection to channel.');
         channel.assertExchange('hw4', 'direct', { durable: false });
-        assertQueue = await channel.assertQueue('', { exclusive: true });
+        const assertQueue = await channel.assertQueue('', { exclusive: true });
+        callback(channel, assertQueue);
       }
 
-    }
-  );
-
-}
-
-function createdChannel(channel : Channel) {
-
-  channel.consume(assertQueue.queue, 
-    
-    (msg) => {
-
-
-    },
-    {
-      noAck: true
-    }
-  )
+  });
 }
 
 export async function listen(keys: string[], callback: Function){
 
-  keys.forEach(
+  connectChannel(
+    (channel: Channel, queue : Replies.AssertQueue) => {
 
-    (key, i) => {
-      channel.bindQueue(assertQueue.queue, 'hw4', key);
+      keys.forEach(
+
+        (key, i) => {
+          channel.bindQueue(queue.queue, 'hw4', key);
+        }
+      )
+    
+      channel.consume(queue.queue, 
+        (msg: ConsumeMessage|null) => {
+          if(msg != null){
+            callback(msg.content.toString());
+          }
+        }
+      )
     }
-  )
-
-  channel.consume(assertQueue.queue, 
-    (msg: ConsumeMessage|null) => {
-      if(msg != null){
-        callback(msg.content.toString());
-      }
-    }
-  )
-
+  );
 
 
 }
 
 export function speak(key: string, msg: string){
-  channel.publish('hw4', key, Buffer.from(msg));
+
+
+  connectChannel(
+
+    (channel: Channel, queue : Replies.AssertQueue) => {
+
+      channel.publish('hw4', key, Buffer.from(msg));
+
+    }
+
+  );
+
 }
