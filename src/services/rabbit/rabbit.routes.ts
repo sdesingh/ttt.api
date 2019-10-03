@@ -9,15 +9,16 @@ export default [
     handler: async (req: Request, res: Response) => {
       const keys : string[] = req.body.keys;
       let total = 0;
-      let message = "";
+      let sent = false;
       console.log('Listening for ' + keys);
       controller.listen(keys, (msg: string) => {
-        message += msg;
-        total++;
-        if(total == keys.length){
-          console.log(`Message: ${message} | Keys: ${keys}`);
-          res.json({msg: message});
+
+        if(!sent){
+          console.log(`Message: ${msg} | Keys: ${keys}`);
+          res.json({msg: msg});
         }
+
+        
       });
     },
   },
