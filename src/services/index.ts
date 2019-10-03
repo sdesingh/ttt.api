@@ -1,5 +1,6 @@
 import tttRoutes from './ttt/ttt.routes';
 import userRoutes from './user/user.routes';
+import rabbitRoutes from './rabbit/rabbit.routes';
 import { Request, Response } from 'express';
 import path from 'path';
 
@@ -14,6 +15,7 @@ export default [
   //   }
   // },
   ...userRoutes,
+  ...rabbitRoutes,
   ...tttRoutes,
   {
     path: "*",
