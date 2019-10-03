@@ -8,7 +8,6 @@ import mongoose from 'mongoose';
 
 import keys from './config/keys.json';
 import path from 'path';
-import { initializeRabbitConnection } from "./services/rabbit/RabbitController";
 
 
 process.on("uncaughtException", e => {
@@ -41,7 +40,6 @@ mongoose
   .then(() => console.log("Successfully connected to MongoDB."))
   .catch(err => console.log(err));
 
-initializeRabbitConnection();
 
 
 
