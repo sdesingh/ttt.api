@@ -8,7 +8,9 @@ export default [
     method: "post",
     handler: async (req: Request, res: Response) => {
       const keys : string[] = req.body.keys;
-      controller.listen(keys);
+      controller.listen(keys, (msg: string) => {
+        res.json({msg: msg});
+      });
     },
   },
   {
@@ -18,6 +20,7 @@ export default [
       const key = req.body.key;
       const msg = req.body.msg;
       controller.speak(key, msg);
+      res.json({message: 'Message sent successfully.'});
     }
   }
 ]

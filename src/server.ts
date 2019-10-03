@@ -5,9 +5,10 @@ import routes from "./services";
 import middleware from "./middleware";
 import errorHandlers from "./middleware/errorHandlers";
 import mongoose from 'mongoose';
-import amqp from 'amqplib';
+
 import keys from './config/keys.json';
 import path from 'path';
+import { initializeRabbitConnection } from "./services/rabbit/RabbitController";
 
 
 process.on("uncaughtException", e => {
@@ -19,6 +20,8 @@ process.on("unhandledRejection", e => {
     console.log(e);
     process.exit(1);
 })
+
+export let channel = null;
 
 const router = express();
 
@@ -38,21 +41,8 @@ mongoose
   .then(() => console.log("Successfully connected to MongoDB."))
   .catch(err => console.log(err));
 
-// Initialize message broker.
-amqp.connect('amqp://localhost', 
+initializeRabbitConnection();
 
-      (err: any, ch : any) => {
-        if(err){
-          console.log("Unable to connect to message broker..");
-        }
-        else {
-          console.log("Successfully connected to message broker.")
-          ch.createChannel((err : any, channel: any)=> {});
-          ch.assertExchange("hw4", "direct", { durable: false })
-        }
-      }
-
-);
 
 
 router.use(express.static(path.join(__dirname, 'services/client')));
